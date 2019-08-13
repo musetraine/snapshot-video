@@ -1,68 +1,21 @@
-var express = require('express');
-var app = express();
-
-const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
-const ffmpeg = require('fluent-ffmpeg');
-
-const ffprobePath = require('@ffprobe-installer/ffprobe').path;
-ffmpeg.setFfprobePath(ffprobePath);
-ffmpeg.setFfmpegPath(ffmpegPath);
-
-var cors = require('cors');
+var express     = require('express');
+const videoCore = require('./videoCore');
+var app         = express();
 
 
-app.use(cors());
-
-const puppeteer = require('puppeteer');
-var videoshow = require('videoshow');
-
-let frames = [];
-
-(async () => {
-	const browser = await puppeteer.launch();
-	const page = await browser.newPage();
-	await page.setViewport({
-		width: 800,
+videoCore({
+	url: 'http://www.goodboydigital.com/pixijs/examples/12-2/',
+	viewport: {
+		width: 800,               // sets the viewport (window size) to 800x600
 		height: 600
-	});
-	await page.goto('https://www.getwearable.net/');
-
-	for (var i=0; i<100; i++) {
-		frames.push(`./example${i}.png`);
-		await page.screenshot({path: `example${i}.png`});
-		await page.waitFor(250);
-	}
-
-	await browser.close().then(() => {
-		console.log('frames ready');
-		var videoOptions = {
-			fps: 99,
-			loop: 0.25, // seconds
-			transition: false,
-			transitionDuration: 1, // seconds
-			videoBitrate: 1024,
-			videoCodec: 'libx264',
-			size: '800x600',
-			audioBitrate: '128k',
-			format: 'mp4',
-			pixelFormat: 'yuv420p',
-//			captionDelay: 250,
-			debug: true,
-		};
-
-		videoshow(frames, videoOptions)
-			.save('video.mp4')
-			.on('start', function (command) {
-				console.log('ffmpeg process started:', command)
-			})
-			.on('error', function (err, stdout, stderr) {
-				console.error('Error:', err)
-				console.error('ffmpeg stderr:', stderr)
-			})
-			.on('end', function (output) {
-				console.error('Video created in:', output)
-			});
-	});
-
-
-})();
+	},
+	//selector: '#container',     // crops each frame to the bounding box of '#container'
+	//left: 20, top: 40,          // further crops the left by 20px, and the top by 40px
+	//right: 6, bottom: 30,       // and the right by 6px, and the bottom by 30px
+	fps: 24,                    // saves 30 frames for each virtual second
+	duration: 5,               // for 20 virtual seconds
+	output: 'video.mp4'         // to video.mp4 of the current working directory
+}).then(function () {
+	console.log('Done!');
+});
+module.exports = app;

@@ -1,27 +1,15 @@
 {
-  "name": "chatback",
-  "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
+  "name": "videosnap",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "@ffmpeg-installer/ffmpeg": "^1.0.19",
-    "@ffprobe-installer/ffprobe": "^1.0.12",
-    "cors": "^2.8.5",
-    "express": "^4.16.4",
-    "ffmpeg": "0.0.4",
-    "fluent-ffmpeg": "^2.0.0",
-    "pg-promise": "^8.5.2",
-    "puppeteer": "^1.19.0",
-    "puppeteer-core": "^1.19.0",
-    "react": "^16.8.6",
-    "sequelize": "^6.0.0",
-    "sha256": "^0.2.0",
-    "socket.io": "^2.1.1",
-    "videoshow": "^0.1.11"
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "morgan": "~1.9.1",
+    "timesnap": "^0.1.1"
   }
 }
